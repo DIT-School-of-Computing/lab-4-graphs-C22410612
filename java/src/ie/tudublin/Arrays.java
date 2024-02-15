@@ -1,5 +1,7 @@
 package ie.tudublin;
 
+import javax.swing.ToolTipManager;
+
 import processing.core.PApplet;
 
 
@@ -12,7 +14,7 @@ public class Arrays extends PApplet
 
 	public float map1(float a, float b, float c, float d, float e)
 	{
-		float r1 = c -b;
+		float r1 = c - b;
 		float r2 = e - d;
 
 		float howFar = a - b;
@@ -21,8 +23,9 @@ public class Arrays extends PApplet
 
 	void randomize()
 	{
-		for (int i = 0; i < rainfall.length; i++) {
-			rainfall[i] = random(500);
+		for (int i = 0; i < rainfall.length; i++)
+		{
+			rainfall[i] = random(450);
 		}
 	}
 
@@ -92,14 +95,17 @@ public class Arrays extends PApplet
 	{
 		colorMode(HSB);
 		background(0);
-		randomize();
+		//randomize();
 	}
 
 	
 	public void draw()
 	{	
 
-		background(0);
+		background(255);
+
+		// BAR CHART
+		/* 
 
 		// Axis
 		fill(0,100,0);
@@ -109,7 +115,7 @@ public class Arrays extends PApplet
 
 		// Bars
 		float w = width / (float)months.length;
-		for(int i = 0 ; i < months.length ;  i ++)
+		for(int i = 0 ; i < months.length ;  i++)
 		{
 			stroke(0);
 			fill(i * 25, 100, 100);
@@ -120,6 +126,73 @@ public class Arrays extends PApplet
 			// Axis
 			text(months[i], x, 480);
 			text((40 * i), 20, y);
+		}
+		*/
+		
+
+		// TREND LINE
+		/*
+
+		// Axis
+		fill(0,100,0);
+		stroke(255);
+		rect(50, 450, 1000, 3);
+		rect(50, 0, 3, 450);
+
+		float w = width / (float)months.length;
+		for(int i = 0 ; i < months.length - 1 ;  i++)
+		{
+			stroke(255);
+			float x = map1(i, 0, months.length, 54, width);
+			float x1 = map1(i + 1, 0, months.length, 54, width);
+			float y = map1(i, 0, months.length, height - 50, 0);
+
+			if(i == 0)
+			{
+				line(50, 450, x1, rainfall[i + 1]);
+			}
+
+			else
+			{
+				line(x, rainfall[i], x1, rainfall[i + 1]);
+			}
+			
+
+			// Axis
+			fill(i * 25, 100, 100);
+			text(months[i], x, 480);
+			text((40 * i), 20, y);
+		}
+
+		*/
+
+		// PIE CHART
+
+		float tot = 0;
+		for(float f:rainfall)
+		{
+			tot += f;
+		}
+
+		float diameter = 300;
+		
+		for(int i = 0; i < months.length - 1; i++)
+		{
+			float lastAngle = 0;
+			float y = tot / rainfall[i];
+			//float angle = map1(rainfall[i], 0, y, 0, TWO_PI);
+			float angle = map(i, 0, months.length, 0, 255);
+			arc(width/2 + (i * 10), height/2, diameter, diameter, lastAngle, lastAngle+radians(rainfall[i]));
+    		lastAngle += radians(rainfall[i]);
+
+			//arc(angle, angle + i, i, y, angle, tot);
+			fill(angle);
+			
+			//arc(angle, angle, 50 + (i * 10), 50 + (i * 10), 0, HALF_PI, PIE);
+		
+			
+			//arc(angle + 250, 300, y, y, 0, QUARTER_PI);
+			
 		}
 	}
 }
