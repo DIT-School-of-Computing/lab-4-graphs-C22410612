@@ -102,7 +102,7 @@ public class Arrays extends PApplet
 	public void draw()
 	{	
 
-		background(255);
+		background(0);
 
 		// BAR CHART
 		/* 
@@ -175,24 +175,20 @@ public class Arrays extends PApplet
 		}
 
 		float diameter = 300;
-		
-		for(int i = 0; i < months.length - 1; i++)
-		{
-			float lastAngle = 0;
-			float y = tot / rainfall[i];
-			//float angle = map1(rainfall[i], 0, y, 0, TWO_PI);
-			float angle = map(i, 0, months.length, 0, 255);
-			arc(width/2 + (i * 10), height/2, diameter, diameter, lastAngle, lastAngle+radians(rainfall[i]));
-    		lastAngle += radians(rainfall[i]);
+		float lastAngle = 0;
 
-			//arc(angle, angle + i, i, y, angle, tot);
-			fill(angle);
-			
-			//arc(angle, angle, 50 + (i * 10), 50 + (i * 10), 0, HALF_PI, PIE);
-		
-			
-			//arc(angle + 250, 300, y, y, 0, QUARTER_PI);
-			
+		for (int i = 0; i < rainfall.length; i++)
+		{
+			float breath = tot / rainfall[i];
+			float angle = map(rainfall[i], 0, breath, 0, TWO_PI);
+
+			fill(i * 25, 100, 100);
+			arc(width / 2, height / 2, diameter, diameter, lastAngle, lastAngle+radians(breath), PIE);
+
+			lastAngle += radians(breath);
+
+			//text(months[i], sin(radians(angle)), sin(radians(angle)));
+			text(months[i], width / 2, height / 2);
 		}
-	}
+	}	
 }
