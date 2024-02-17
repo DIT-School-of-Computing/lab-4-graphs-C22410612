@@ -12,6 +12,8 @@ public class Arrays extends PApplet
 
 	float[] rainfall = {200, 260, 300, 150, 100, 50, 10, 40, 67, 160, 400, 420};
 
+	int mode = 0;
+
 	public float map1(float a, float b, float c, float d, float e)
 	{
 		float r1 = c - b;
@@ -95,100 +97,130 @@ public class Arrays extends PApplet
 	{
 		colorMode(HSB);
 		background(0);
-		//randomize();
+		randomize();
 	}
 
+	public void keyPressed()
+	{
+		if (key >= '0' && key <= '9')
+		{
+			mode = key - '0';
+		}
+
+		println(mode);
+	}
 	
 	public void draw()
 	{	
+		background(0); // Black background
 
-		background(0);
-
-		// BAR CHART
-		/* 
-
-		// Axis
-		fill(0,100,0);
-		stroke(255);
-		rect(50, 450, 1000, 3);
-		rect(50, 0, 3, 450);
-
-		// Bars
-		float w = width / (float)months.length;
-		for(int i = 0 ; i < months.length ;  i++)
+		// Switch statement to control which chart is displayed
+		switch(mode)
 		{
-			stroke(0);
-			fill(i * 25, 100, 100);
-			float x = map1(i, 0, months.length, 54, width);
-			float y = map1(i, 0, months.length, height - 50, 0);
-			rect(x, 449, w, -rainfall[i]);
-			
-			// Axis
-			text(months[i], x, 480);
-			text((40 * i), 20, y);
-		}
-		*/
+			// BAR CHART
+			case 1 :
+
+				// Axis
+				fill(0,100,0);
+				stroke(255);
+				rect(50, 450, 1000, 3);
+				rect(50, 0, 3, 450);
+
+				// Bars
+				float w = width / (float)months.length;
+
+				for(int i = 0 ; i < months.length ;  i++)
+				{
+					stroke(0);
+					fill(i * 25, 100, 100);
+					float x = map1(i, 0, months.length, 54, width);
+					float y = map1(i, 0, months.length, height - 50, 0);
+					rect(x, 449, w, -rainfall[i]);
+					
+					// Text
+					text(months[i], x, 480);
+					text((40 * i), 20, y);
+				}
+
+				fill(255);
+				text("Bar Chart", 260, 30);
+
+				break;
+
+			// TREND LINE
+			case 2 :
 		
+				// Axis
+				fill(0,100,0);
+				stroke(255);
+				rect(50, 450, 1000, 3);
+				rect(50, 0, 3, 450);
 
-		// TREND LINE
-		/*
+				for(int i = 0 ; i < months.length - 1 ;  i++)
+				{
+					stroke(255);
+					float x = map1(i, 0, months.length, 54, width);
+					float x1 = map1(i + 1, 0, months.length, 54, width);
+					float y = map1(i, 0, months.length, height - 50, 0);
 
-		// Axis
-		fill(0,100,0);
-		stroke(255);
-		rect(50, 450, 1000, 3);
-		rect(50, 0, 3, 450);
+					if(i == 0)
+					{
+						line(50, 450, x1, rainfall[i + 1]);
+					}
 
-		float w = width / (float)months.length;
-		for(int i = 0 ; i < months.length - 1 ;  i++)
-		{
-			stroke(255);
-			float x = map1(i, 0, months.length, 54, width);
-			float x1 = map1(i + 1, 0, months.length, 54, width);
-			float y = map1(i, 0, months.length, height - 50, 0);
+					else
+					{
+						line(x, rainfall[i], x1, rainfall[i + 1]);
+					}
+					
+					// Text
+					fill(i * 25, 100, 100);
+					text(months[i], x, 480);
+					text((40 * i), 20, y);
+				}
 
-			if(i == 0)
-			{
-				line(50, 450, x1, rainfall[i + 1]);
+				fill(255);
+				text("Line Graph", 260, 30);
+
+				break;
+
+				// PIE CHART
+				case 3 :
+
+					float diameter = 300;
+					float lastAngle = 0;
+
+					// Total rainfall
+					float tot = 0;
+					for(float f:rainfall)
+					{
+						tot += f;
+					}
+
+					for (int i = 0; i < rainfall.length; i++)
+					{
+						float hue = map(i, 0, rainfall.length, 0, 255);
+						fill(hue, 255, 255);
+
+						float angle = map(rainfall[i], 0, tot, 0, TWO_PI);
+						arc(width / 2, height / 2, diameter, diameter, lastAngle, lastAngle + angle, PIE);
+						
+						float labelAngle = lastAngle + angle / 2;
+						float textX = width / 2 + (diameter / 2 + 20) * cos(labelAngle);
+						float textY = height / 2 + (diameter / 2 + 20) * sin(labelAngle);
+						
+						lastAngle += angle;
+
+						// Text
+						textAlign(CENTER, CENTER);
+						text(months[i], textX, textY);
+					}
+					
+					// Title
+					fill(255);
+					text("Rainfall piechart", 260, 30);
+
+					break;
 			}
-
-			else
-			{
-				line(x, rainfall[i], x1, rainfall[i + 1]);
-			}
-			
-
-			// Axis
-			fill(i * 25, 100, 100);
-			text(months[i], x, 480);
-			text((40 * i), 20, y);
-		}
-
-		*/
-
-		// PIE CHART
-
-		float tot = 0;
-		for(float f:rainfall)
-		{
-			tot += f;
-		}
-
-		float diameter = 300;
-		float lastAngle = 0;
-
-		for (int i = 0; i < rainfall.length; i++)
-		{
-			float breath = tot / rainfall[i];
-			float angle = map(rainfall[i], 0, breath, 0, TWO_PI);
-
-			fill(i * 25, 100, 100);
-			arc(width / 2, height / 2, diameter, diameter, lastAngle, lastAngle+radians(breath), PIE);
-
-			lastAngle += radians(breath);
-
-			//text(months[i], sin(radians(angle)), sin(radians(angle)));
-			text(months[i], width / 2, height / 2);
 		}
 	}	
-}
